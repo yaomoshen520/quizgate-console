@@ -147,16 +147,19 @@ function renumberedIndex(): number {
 
 const rowBusy = ref('')
 const actionError = ref('')
+const actionNotice = ref('')
 
 /**
  * 点的是库里的 verified，不是页面上的一个标记：闸门抽题只抽已核对的那些。
  * 所以改完必须重新读一次列表，否则家长看到的是一个已经不存在的状态。
  */
 async function setVerified(questionId: string, verified: boolean) {
+  if (rowBusy.value) return
   rowBusy.value = questionId
   actionError.value = ''
+  actionNotice.value = ''
   try {
-    await rpc(
+    const reply = await rpc(
       '/parent/verify-question',
       VerifyQuestionRequestSchema,
       VerifyQuestionReplySchema,
@@ -164,6 +167,7 @@ async function setVerified(questionId: string, verified: boolean) {
       session.parentToken,
     )
     await load()
+    actionNotice.value = reply.message
   } catch (e) {
     actionError.value = e instanceof Error ? e.message : String(e)
   } finally {
@@ -172,9 +176,11 @@ async function setVerified(questionId: string, verified: boolean) {
 }
 
 async function remove(questionId: string) {
+  if (rowBusy.value) return
   if (!window.confirm('删掉这道题？孩子那边正在做的这一道也会一起作废。')) return
   rowBusy.value = questionId
   actionError.value = ''
+  actionNotice.value = ''
   try {
     await rpc(
       '/parent/delete-question',
@@ -303,7 +309,11 @@ async function remove(questionId: string) {
         <span aria-hidden="true">✕</span>
         <span>{{ listError || actionError }}</span>
       </p>
-      <table v-else-if="questions.length > 0" class="table table--stack" role="table">
+      <p v-if="actionNotice" class="alert alert--ok list-msg" role="status">
+        <span aria-hidden="true">✓</span>
+        <span>{{ actionNotice }}</span>
+      </p>
+      <table v-if="!listError && !actionError && questions.length > 0" class="table table--stack" role="table">
         <thead>
           <tr>
             <th scope="col">学科</th>
@@ -356,7 +366,7 @@ async function remove(questionId: string) {
                   v-if="!q.verified"
                   class="btn btn--primary btn--sm"
                   type="button"
-                  :disabled="rowBusy === q.questionId"
+                  :disabled="rowBusy !== ''"
                   @click="setVerified(q.questionId, true)"
                 >
                   核对通过
@@ -365,7 +375,7 @@ async function remove(questionId: string) {
                   v-else
                   class="btn btn--ghost btn--sm"
                   type="button"
-                  :disabled="rowBusy === q.questionId"
+                  :disabled="rowBusy !== ''"
                   @click="setVerified(q.questionId, false)"
                 >
                   驳回
@@ -373,7 +383,7 @@ async function remove(questionId: string) {
                 <button
                   class="btn btn--ghost btn--sm"
                   type="button"
-                  :disabled="rowBusy === q.questionId"
+                  :disabled="rowBusy !== ''"
                   @click="remove(q.questionId)"
                 >
                   删除
@@ -383,7 +393,7 @@ async function remove(questionId: string) {
           </tr>
         </tbody>
       </table>
-      <p v-else class="muted table-empty">还没传过题。手打一道，或者拍一张卷子——拍回来的那些要先在这里点「核对通过」，孩子才抽得到。</p>
+      <p v-else-if="!listError && !actionError" class="muted table-empty">还没传过题。手打一道，或者拍一张卷子——未核对的题要先在这里点「核对通过」，孩子才抽得到。</p>
     </section>
   </div>
 </template>

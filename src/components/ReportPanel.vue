@@ -82,7 +82,7 @@ const today = computed(() => {
         <div>
           <h2 class="t-card">用量</h2>
           <p class="muted">
-            数字来自孩子设备的上报，设备没电、没网或者当天没玩都会是空的——空表不等于闸门在偷跑。
+            娱乐时长、答题数和抢屏失败来自设备上报，服务端出题数单独统计。没有记录的日期不补零；空表不能据此判断设备是否使用过。
           </p>
         </div>
         <div class="row--tight pick">
@@ -123,16 +123,16 @@ const today = computed(() => {
           />
           <StatCard
             icon="device"
-            label="闸门拦截"
+            label="服务端出题"
             :value="totals.interceptions"
-            hint="次抢屏"
+            hint="含换题，本地题不计入"
             :tone="totals.interceptions > 0 ? 'warn' : 'idle'"
           />
           <StatCard
             icon="child"
             label="拦截失败"
             :value="totals.failures"
-            hint="抢屏没成，孩子直接进去了"
+            hint="设备报告抢屏未成功"
             :tone="totals.failures > 0 ? 'warn' : 'ok'"
           />
         </div>
@@ -146,7 +146,7 @@ const today = computed(() => {
                 <th scope="col">日期</th>
                 <th scope="col">娱乐时长</th>
                 <th scope="col">对/错</th>
-                <th scope="col">拦截</th>
+                <th scope="col">服务端出题</th>
                 <th scope="col">拦截失败</th>
               </tr>
             </thead>

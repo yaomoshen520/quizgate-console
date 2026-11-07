@@ -120,7 +120,7 @@ onMounted(load)
           {{
             neverConfigured
               ? '这个孩子还没存过规则，下面显示的是服务端默认值；保存一次才会写进库。'
-              : `当前生效的是库里这一份（版本 ${loadedVersion}）。`
+              : `服务器已保存这份规则（版本 ${loadedVersion}）；设备支持的范围见上方说明。`
           }}
         </p>
       </div>
@@ -142,17 +142,17 @@ onMounted(load)
       <label class="field">
         <span class="field__label">玩满多少分钟弹窗</span>
         <input v-model.number="threshold" class="input" type="number" min="1" max="600" />
-        <span class="muted hint">连续用娱乐应用达到这个时长就抢屏出题。填 0 会被服务端退回默认 30。</span>
+        <span class="muted hint">孩子端开启「跟随服务端阈值」后，按这个时长抢屏出题；未开启时仍用本机阈值。</span>
       </label>
       <label class="field">
         <span class="field__label">每日上限（分钟）</span>
         <input v-model.number="dailyLimit" class="input" type="number" min="1" max="1440" />
-        <span class="muted hint">当天娱乐时长累计到这里就不再放行新会话。填 0 会被服务端退回 120，不是"不限"。</span>
+        <span class="muted hint">已保存到服务端，当前孩子端尚未按每日上限限制使用。</span>
       </label>
       <label class="field">
-        <span class="field__label">答题宽限（分钟）</span>
+        <span class="field__label">离开应用宽限（分钟）</span>
         <input v-model.number="grace" class="input" type="number" min="0" max="60" />
-        <span class="muted hint">答错后隔多久可以再来一次。0 表示答错即锁到明天。</span>
+        <span class="muted hint">离开全部监管应用后，在宽限内返回仍算同一段连续使用。当前孩子端固定为 2 分钟，暂不使用这里的值。</span>
       </label>
       <div class="field">
         <span class="field__label">闸门开关</span>
@@ -160,7 +160,7 @@ onMounted(load)
           <input v-model="enabled" type="checkbox" />
           启用
         </label>
-        <span class="muted hint">关掉后设备仍会上报用量，只是不再弹窗。这个开关跟着请求一起发，不是只读展示。</span>
+        <span class="muted hint">开关状态会保存到服务端，当前孩子端尚未按它开启或关闭闸门。</span>
       </div>
     </div>
 
@@ -174,7 +174,7 @@ onMounted(load)
         autocapitalize="off"
       ></textarea>
       <span class="muted hint">
-        留空表示按设备内置的那份清单计时。
+        清单会保存到服务端，当前孩子端仍使用本机清单，暂不使用这里的设置。
       </span>
     </label>
 
@@ -184,7 +184,7 @@ onMounted(load)
         {{ busy ? '保存中…' : '保存并下发' }}
       </button>
       <p class="muted fine">
-        规则写进库、版本由服务端盖章，孩子设备下一次心跳就会发现变了。设备内置清单与每日上限的落地要等 S3，见页顶那条提示。
+        保存后生成新版本。孩子端开启「跟随服务端阈值」时，连续时长阈值会随心跳同步；其余字段当前仅保存，不代表设备已经执行。
       </p>
     </div>
   </section>

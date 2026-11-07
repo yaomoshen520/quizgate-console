@@ -5,6 +5,12 @@ Vue 3 + TypeScript + Vite，**没有组件库**，样式全在 `src/styles/theme
 
 服务端：https://github.com/yaomoshen520/quizgate-server
 
+## 当前进展与待确认
+
+三端统一清单见服务端仓库的[项目进展与待确认](https://github.com/yaomoshen520/quizgate-server/blob/main/docs/项目进展与待确认.md)。
+孩子端已接入联网取题、判分和用量上报；仅开启跟随后执行连续时长阈值，其余规则暂仅保存，页面已注明实际支持范围。
+“服务端出题”包含换题，不等于成功弹窗次数；设备失联不能证明卸载。游戏模式已暂停。
+
 ## 三个角色三套页面
 
 登录返回的令牌 kind 决定能进哪条路由：家长 / 管理员 / 设备。

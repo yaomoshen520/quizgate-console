@@ -105,8 +105,8 @@ const empty = computed(() => alerts.loaded && alerts.items.length === 0 && alert
         </tbody>
       </table>
       <p class="card__foot muted">
-        「失联」这一档服务端说不出原因——设备上已经没有代码在跑了，报不了自己的死。
-        要确认是哪一种，拿这台机器登录一次 App：能重新登记就是被卸载或清数据，登记不了再看是否断网。
+        「失联」只表示超过约定时间没有收到心跳，可能是卸载、关机或断网，不能据此确定原因。
+        请检查设备电量、网络和 App 权限，再确认能否恢复心跳；重新登记也不能证明此前发生过卸载。
       </p>
     </section>
 

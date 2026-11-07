@@ -126,7 +126,7 @@ function initial(name: string): string {
         </button>
       </div>
       <p class="muted add-child__note">
-        创建时会自动带上默认闸门规则，不会让孩子设备裸奔；阈值、每日上限要在规则页调整（页面还没上线）。
+        创建后可进入「设置」管理规则、题库和用量。连续时长阈值需在孩子端开启跟随后才同步，其余规则的实际支持范围会在规则页说明。
         <template v-if="session.isAdmin">
           管理员建的档案挂在管理员账号名下——要给某位家长建，让那位家长自己登录后建，设备绑定码才归他认领。
         </template>
